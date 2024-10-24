@@ -14,13 +14,13 @@ public class ProgramTest {
     BestGymEver bge = new BestGymEver(true);
 
     @Test
-    public void clientObjectTest()  {
+    public void clientObjectCreatTest()  {
 
         Client client = new Client("7703021234, Alhambra Aromes\n2024-07-01");
-        LocalDate clientDate = LocalDate.parse("2024-07-01");
+        LocalDate currentDate = LocalDate.parse("2024-07-01");
         assertEquals(client.getName(),"Alhambra Aromes");
         assertEquals(client.getNumber(),"7703021234");
-        assertEquals(client.getJoinDate(),clientDate);
+        assertEquals(client.getJoinDate(),currentDate);
     }
 
     @Test
@@ -30,71 +30,16 @@ public class ProgramTest {
         Client c3 = new Client("8512021234, Chamade Coriola \n2018-03-12");
         Client c4 = new Client("7608021234, Diamanda Djedi\n2024-01-30");
         List<Client> clientList = Arrays.asList(c1,c2,c3,c4);
-        String foundName1 = "Alhambra Aromes";
-        String foundName2 = " dIamanda dJedi ";
-        String foundNumber1 = "8512021234";
-        String foundNumber2 = "8204021234";
+        String foundNamec1 = "Alhambra Aromes";
+        String foundNamec4 = " dIamanda dJedi ";
+        String foundNumberc3 = "8512021234";
+        String foundNumberc2 = "8204021234";
         String notFoundName = "Erik Söderlind";
-        assertEquals(c1,bge.objectListSearch(clientList,foundName1));
-        assertEquals(c2,bge.objectListSearch(clientList,foundNumber2));
-        assertEquals(c3,bge.objectListSearch(clientList,foundNumber1));
-        assertEquals(c4,bge.objectListSearch(clientList,foundName2));
-        assertNull(bge.objectListSearch(clientList,notFoundName));
-
-    }
-
-    @Test
-    public void compareNameToListTest() {
-        String foundName1 = "Alhambra Aromes";
-        String foundName2 = " alhAmBra aromEs ";
-        Path pa = Path.of("Test/TestClientList.txt");
-        assertEquals("7703021234, Alhambra Aromes\n2024-07-01", bge.listSearch(foundName1, pa));
-        assertEquals("7703021234, Alhambra Aromes\n2024-07-01", bge.listSearch(foundName2, pa));
-        assertNotEquals("7703021234, Alhambra Aromes\n2024-07-01", bge.listSearch(" Al",pa));
-        assertNotEquals("7703021234, Alhambra Aromes\n2024-07-01", bge.listSearch("es ",pa));
-        assertNotEquals("7703021234, Alhambra Aromes\n2024-07-01", bge.listSearch("ham",pa));
-    }
-
-    @Test
-    public void compareNumberToListTest() {
-        String foundNumber = " 7703021234 ";
-        Path pa = Path.of("Test/TestClientList.txt");
-        assertEquals("7703021234, Alhambra Aromes\n2024-07-01", bge.listSearch(foundNumber, pa));
-        assertNotEquals("7703021234, Alhambra Aromes\n2024-07-01",bge.listSearch("77",pa));
-        assertNotEquals("7703021234, Alhambra Aromes\n2024-07-01",bge.listSearch("34 ",pa));
-        assertNotEquals("7703021234, Alhambra Aromes\n2024-07-01",bge.listSearch("0302",pa));
-    }
-    @Test
-    public void compareNotFoundNameToListTest() {
-        String notFoundName = "Erik Söderlind";
-        Path pa = Path.of("Test/TestClientList.txt");
-        assertEquals("Ingen sökträff!", bge.listSearch(notFoundName, pa));
-
-
-    }
-    @Test
-    public void compareNotFoundNumberToListTest() {
-        String notFoundNumber = "01898909";
-        Path pa = Path.of("Test/TestClientList.txt");
-        assertEquals("Ingen sökträff!", bge.listSearch(notFoundNumber, pa));
-
-    }
-
-    @Test
-    public void convertStringToDateTest() {
-
-        String clientInfo = "7703021234, Alhambra Aromes\n2024-07-01";
-        LocalDate testDate = LocalDate.parse("2024-07-01");
-        assertEquals(testDate,bge.clientInfoToDate(clientInfo));
-
-    }
-
-    @Test
-    public void convertStringToNameNumberTest() {
-
-        String clientInfo = "7703021234, Alhambra Aromes\n2024-07-01";
-        String clientNameNumber = "7703021234, Alhambra Aromes";
-        assertEquals(clientNameNumber,bge.clientInfoToNameNumber(clientInfo));
+        assertEquals(c1,bge.clientObjectListSearch(clientList,foundNamec1));
+        assertEquals(c2,bge.clientObjectListSearch(clientList,foundNumberc2));
+        assertEquals(c3,bge.clientObjectListSearch(clientList,foundNumberc3));
+        assertEquals(c4,bge.clientObjectListSearch(clientList,foundNamec4));
+        assertNull(bge.clientObjectListSearch(clientList,notFoundName));
 
     }
 
@@ -138,8 +83,31 @@ public class ProgramTest {
         bge.addToPTList(client1,clientAttendDate1,pa);
         bge.addToPTList(client2,clientAttendDate2,pa);
         List<Client> testPTList = bge.creatClientObjectList(pa);
-        assertEquals(client1.getName(),bge.objectListSearch(testPTList,"7703021234").getName());
-        assertEquals(client2.getName(),bge.objectListSearch(testPTList,"0189890909").getName());
+        assertEquals(client1.getName(),bge.clientObjectListSearch(testPTList,"7703021234").getName());
+        assertEquals(client2.getName(),bge.clientObjectListSearch(testPTList,"0189890909").getName());
 
+    }
+
+    @Test
+    public void clientValidandPrintToPTListTest() throws IOException {
+        LocalDate currentDate = LocalDate.parse("2024-10-17");
+        Client clientSearch = new Client("7703021234, Alhambra Aromes\n2024-07-01");
+        Client clientSearch2 = new Client("0189890909, Erik Söderlind\n2021-03-13");
+        Client clientSearch3 = null;
+        Path ptTestListpath = Paths.get("Test/PTListTest2.txt");
+        assertEquals ("Aktiv medlem" ,bge.clientValidator(currentDate,ptTestListpath, clientSearch));
+        assertEquals ("Inaktiv medlem" ,bge.clientValidator(currentDate,ptTestListpath, clientSearch2));
+        assertEquals ("Ingen Sökträff!" ,bge.clientValidator(currentDate,ptTestListpath, clientSearch3));
+    }
+
+    @Test
+    public void throwsIOExceptionTest()  {
+        Path wrongPath = Paths.get("Test/wrongtest.txt");
+        Throwable exception = assertThrows(IOException.class,()->bge.creatClientObjectList(wrongPath));
+    }
+
+    @Test
+    public void throwsNullPointerExceptionTest()  {
+        Throwable exception = assertThrows(NullPointerException.class,()->bge.creatClientObjectList(null));
     }
 }
