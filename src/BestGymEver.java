@@ -26,20 +26,6 @@ public class BestGymEver {
 
             String returnMessage = clientValidator(today,ptlist,searchedClient);
             System.out.println(returnMessage);
-
-
-        }
-    }
-    public String clientValidator (LocalDate today,Path ptTestListpath,Client clientSearch){
-        if (clientSearch != null) {
-            if(dateValidater(today,clientSearch.getJoinDate())) {
-                addToPTList(clientSearch, today, ptTestListpath);
-                return  "Aktiv medlem";
-            } else {
-                return  "Inaktiv medlem";
-            }
-        }else {
-            return "Ingen Sökträff!";
         }
     }
 
@@ -72,6 +58,19 @@ public class BestGymEver {
         return tempClient;
     }
 
+    public String clientValidator (LocalDate today,Path ptTestListpath,Client clientSearch){
+        if (clientSearch != null) {
+            if(dateValidater(today,clientSearch.getJoinDate())) {
+                addToPTList(clientSearch, today, ptTestListpath);
+                return  "Aktiv medlem";
+            } else {
+                return "Inaktiv medlem";
+            }
+        }else {
+            return "Ingen Sökträff!";
+        }
+    }
+
     public boolean dateValidater (LocalDate currentDate, LocalDate inputDate){
 
        LocalDate oneYearOld = currentDate.minusYears(1);
@@ -93,7 +92,7 @@ public class BestGymEver {
     public static void main(String[] args) {
         try {
             while (true) {
-                BestGymEver b = new BestGymEver(false);
+                BestGymEver bge = new BestGymEver(false);
             }
         }
         catch (NullPointerException e) {

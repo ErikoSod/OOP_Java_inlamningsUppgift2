@@ -24,7 +24,7 @@ public class ProgramTest {
     }
 
     @Test
-    public void clientListSearch()  {
+    public void clientListSearchTest()  {
         Client c1 = new Client("7703021234, Alhambra Aromes\n2024-07-01");
         Client c2 = new Client("8204021234, Bear Belle\n2019-12-02");
         Client c3 = new Client("8512021234, Chamade Coriola \n2018-03-12");
@@ -103,11 +103,11 @@ public class ProgramTest {
     @Test
     public void throwsIOExceptionTest()  {
         Path wrongPath = Paths.get("Test/wrongtest.txt");
-        Throwable exception = assertThrows(IOException.class,()->bge.creatClientObjectList(wrongPath));
+        Throwable _ = assertThrows(IOException.class,()->bge.creatClientObjectList(wrongPath));
     }
 
     @Test
     public void throwsNullPointerExceptionTest()  {
-        Throwable exception = assertThrows(NullPointerException.class,()->bge.creatClientObjectList(null));
+        Throwable _ = assertThrows(NullPointerException.class,()->bge.creatClientObjectList(null));
     }
 }
